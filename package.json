@@ -1,0 +1,16 @@
+{
+  "name": "comedero",
+  "version": "1.0.0",
+  "description": "Feed tracker",
+  "main": "server.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Juan Pablo Fernandez Tubello",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.7"
+  }
+}
