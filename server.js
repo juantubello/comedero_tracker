@@ -120,6 +120,6 @@ app.get("/imagen/:id", (req, res) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, '192.168.1.11', () => {
+app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
