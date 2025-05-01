@@ -7,15 +7,12 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar el resto de tu código
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copiar el resto del código
 COPY . .
 
-# Instalar dependencias de npm, incluyendo sqlite3
-RUN npm install
-
-# Exponer el puerto
 EXPOSE 3000
-
-# Comando para iniciar la aplicación
 CMD ["node", "server.js"]
