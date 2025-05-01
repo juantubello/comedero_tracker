@@ -59,6 +59,8 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
     axios.request(config)
         .then((response) => {
+            console.log("Calling interface")
+            console.log(response)
             console.log(JSON.stringify(response.data));
 
             if (response.data?.gato === 'luna_negra') {
