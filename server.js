@@ -36,10 +36,10 @@ app.post("/upload", upload.single("image"), (req, res) => {
         return res.status(400).json({ message: "No se recibió ninguna imagen" });
     }
 
-    const { gato } = req.body;
-    if (!gato) {
-        return res.status(400).json({ message: "Falta el nombre del gato" });
-    }
+    //const { gato } = req.body;
+    //if (!gato) {
+    //    return res.status(400).json({ message: "Falta el nombre del gato" });
+    //}
 
     const fecha = moment().tz("America/Argentina/Buenos_Aires").format("YYYY-MM-DD");
     const hora = new Date().toLocaleTimeString();
@@ -51,34 +51,45 @@ app.post("/upload", upload.single("image"), (req, res) => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'http://192.168.1.53:5000/identificar',
-        headers: { 
-          'Content-Type': 'image/png'
+        headers: {
+            'Content-Type': 'image/png'
         },
-        data : data
-      };
-      
-      axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
+        data: data
+    };
 
-        db.run(
-            `INSERT INTO registros (fecha, hora, gato, imagen) VALUES (?, ?, ?, ?)`,
-            [fecha, hora, gato, imagen],
-            function (err) {
-                if (err) {
-                    console.error("Error al insertar en la BD:", err.message);
-                    return res.status(500).json({ message: "Error al registrar el dato" });
-                }
-                console.log(`Registro guardado: ${fecha} ${hora} - ${gato}`);
-                res.json({ message: "OK", id: this.lastID, fecha, hora, gato });
+    axios.request(config)
+        .then((response) => {
+            console.log(JSON.stringify(response.data));
+
+            if (response.data?.gato === 'luna_negra') {
+                gato = 'Luna';
             }
-        );
+            else if (response.data?.gato === 'artemis_blanca') {
+                gato = 'Artemis';
+            }
 
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      
+            else if (response.data?.gato === 'diana_gris') {
+                gato = 'Luna';
+            }
+
+            db.run(
+                `INSERT INTO registros (fecha, hora, gato, imagen) VALUES (?, ?, ?, ?)`,
+                [fecha, hora, gato, imagen],
+                function (err) {
+                    if (err) {
+                        console.error("Error al insertar en la BD:", err.message);
+                        return res.status(500).json({ message: "Error al registrar el dato" });
+                    }
+                    console.log(`Registro guardado: ${fecha} ${hora} - ${gato}`);
+                    res.json({ message: "OK", id: this.lastID, fecha, hora, gato });
+                }
+            );
+
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
 });
 
 // Ruta para obtener los registros de la BD
