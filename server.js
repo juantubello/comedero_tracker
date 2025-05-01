@@ -3,6 +3,7 @@ const multer = require("multer");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const moment = require("moment-timezone");
+const axios = require('axios');
 
 const app = express();
 const PORT = 3000;
@@ -43,6 +44,8 @@ app.post("/upload", upload.single("image"), (req, res) => {
     const fecha = moment().tz("America/Argentina/Buenos_Aires").format("YYYY-MM-DD");
     const hora = new Date().toLocaleTimeString();
     const imagen = req.file.buffer; // Imagen en binario
+
+    
 
     db.run(
         `INSERT INTO registros (fecha, hora, gato, imagen) VALUES (?, ?, ?, ?)`,
