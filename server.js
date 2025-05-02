@@ -71,7 +71,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
             }
 
             else if (response.data?.gato === 'diana_gris') {
-                gato = 'Luna';
+                gato = 'Diana';
             }
 
             db.run(
