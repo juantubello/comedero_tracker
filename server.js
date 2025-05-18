@@ -79,7 +79,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
                 gato = "unknown";
             }
 
-            if (noCat) {
+            if (!noCat) {
                 db.run(
                     `INSERT INTO registros (fecha, hora, gato, imagen) VALUES (?, ?, ?, ?)`,
                     [fecha, hora, gato, imagen],
