@@ -44,7 +44,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
     const fecha = moment().tz("America/Argentina/Buenos_Aires").format("YYYY-MM-DD");
     const hora = new Date().toLocaleTimeString();
     const imagen = req.file.buffer; // Imagen en binario
-
+    let noCat = false;
     let data = imagen;
 
     let config = {
@@ -74,18 +74,28 @@ app.post("/upload", upload.single("image"), (req, res) => {
                 gato = 'Diana';
             }
 
-            db.run(
-                `INSERT INTO registros (fecha, hora, gato, imagen) VALUES (?, ?, ?, ?)`,
-                [fecha, hora, gato, imagen],
-                function (err) {
-                    if (err) {
-                        console.error("Error al insertar en la BD:", err.message);
-                        return res.status(500).json({ message: "Error al registrar el dato" });
+            else if (response.data?.gato === 'ninguna') {
+                noCat = true;
+                gato = "unknown";
+            }
+
+            if (noCat) {
+                db.run(
+                    `INSERT INTO registros (fecha, hora, gato, imagen) VALUES (?, ?, ?, ?)`,
+                    [fecha, hora, gato, imagen],
+                    function (err) {
+                        if (err) {
+                            console.error("Error al insertar en la BD:", err.message);
+                            return res.status(500).json({ message: "Error al registrar el dato" });
+                        }
+                        console.log(`Registro guardado: ${fecha} ${hora} - ${gato}`);
+                        res.json({ message: "OK", id: this.lastID, fecha, hora, gato });
                     }
-                    console.log(`Registro guardado: ${fecha} ${hora} - ${gato}`);
-                    res.json({ message: "OK", id: this.lastID, fecha, hora, gato });
-                }
-            );
+                );
+            } else {
+                console.log(`No se detecto ninguna gata`);
+                res.json({ message: "ERROR", id: 0, fecha, hora, gato });
+            }
 
         })
         .catch((error) => {
