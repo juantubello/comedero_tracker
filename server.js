@@ -9,7 +9,7 @@ const app = express();
 const PORT = 3000;
 
 // Configurar base de datos SQLite
-const db = new sqlite3.Database(path.join(__dirname, "gatos.db"), (err) => {
+const db = new sqlite3.Database(path.join(__dirname, "data", "gatos.db"), (err) => {
     if (err) {
         console.error("Error al conectar con la BD:", err.message);
     } else {

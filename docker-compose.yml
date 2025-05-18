@@ -6,5 +6,5 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./gatos.db:/app/gatos.db
+      - ./data:/app/data
     restart: unless-stopped
